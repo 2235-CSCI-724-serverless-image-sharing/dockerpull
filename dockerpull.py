@@ -7,7 +7,8 @@ parser = argparse.ArgumentParser(
     description='Intelligent version of docker pull'
     )
 parser.add_argument('images')
-# parser.add_argument('-c', '--count')      # option that takes a value
+parser.add_argument('-t', '--targets', help="a comma-separated list of IP addresses to use to shortcut the network discovery process")
+parser.add_argument('-p', '--port', type=int, default=5000, help="the port number to use when querying the server")
 # parser.add_argument('-d', '--background', action='store_true', help="Runs the server component of the program")
 
 parser.add_argument('-v', '--verbose', action='store_true', help="Output more verbosely")
