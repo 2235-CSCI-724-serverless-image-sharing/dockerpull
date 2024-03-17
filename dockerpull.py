@@ -1,11 +1,12 @@
 
 import argparse
+import docker
 
 parser = argparse.ArgumentParser(
     prog='dockerpull',
     description='Intelligent version of docker pull'
     )
-parser.add_argument('image')
+parser.add_argument('images')
 # parser.add_argument('-c', '--count')      # option that takes a value
 # parser.add_argument('-d', '--background', action='store_true', help="Runs the server component of the program")
 
@@ -17,3 +18,6 @@ args = parser.parse_args()
 
 # Normal client operation
 
+client = docker.from_env()
+
+client.images.pull(args.images)
