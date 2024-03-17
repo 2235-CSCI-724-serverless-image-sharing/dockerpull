@@ -5,9 +5,12 @@ import argparse
 app = Flask(__name__)
 
 @app.route("/")
-def hello_world():
+def list_images():
     return "<p>Hello, World!</p>"
 
+@app.route("/image/<id>")
+def download(id):
+    return "<p>Hello, World!</p>"
 
 if __name__ == '__main__':
 
