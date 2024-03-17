@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser(
     prog='dockerpull',
     description='Intelligent version of docker pull'
     )
-parser.add_argument('images')
+parser.add_argument('images', help="a space separated list of images to download")
 parser.add_argument('-t', '--targets', help="a comma-separated list of IP addresses to use to shortcut the network discovery process")
 parser.add_argument('-p', '--port', type=int, default=5000, help="the port number to use when querying the server")
 # parser.add_argument('-d', '--background', action='store_true', help="Runs the server component of the program")
