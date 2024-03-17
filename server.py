@@ -1,10 +1,14 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
 @app.route("/")
 def list_images():
-    return "<p>Hello, World!</p>"
+	# return JSON that identifies the server and lists the image/layer IDs it can send
+    return jsonify({
+		"dockerpull_version": "0",
+		"images" : []
+	})
 
 @app.route("/image/<id>")
 def download(id):
