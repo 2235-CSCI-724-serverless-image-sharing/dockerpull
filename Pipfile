@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 docker = "*"
+flask = "*"
 
 [dev-packages]
 
