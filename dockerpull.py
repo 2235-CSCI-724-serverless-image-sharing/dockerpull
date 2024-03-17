@@ -22,8 +22,25 @@ args = parser.parse_args()
 client = docker.from_env()
 
 # Step 1: Figure out what other machines on the network support this new extension on existing docker functionality
+targets = args.targets
+
+if targets is None:
+    # Step 1a: Figure out what other machines exist on the network
+    targets = []
+
+# Step 1b: Figure out which of those machines are advertising support for this dockerpull protocol by running the server
+
+    # args.port
+
+
+
 
 # Step 2: check if any of those other machines have any of the same image layers as the ones we need for the current pull operation
+
+# Gets the registry data for an image.
+
+#  get_registry_data(name, auth_config=None)
+
 
 # Step 3: If they do, download them from that local source instead 
 
