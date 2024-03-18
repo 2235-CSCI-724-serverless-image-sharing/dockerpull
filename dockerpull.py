@@ -50,7 +50,10 @@ active_clients = filter(lambda r: r[1] is not None and r[1].status_code == 200, 
 
 active_clients = map(lambda r: (r[0], r[1].json()), active_clients)
 
+dockerpull_clients = filter(lambda r: r[1].get("dockerpull_version") is not None, active_clients)
 
+images_by_client = map(lambda r: (r[0], set(r[1].get("images"))), dockerpull_clients)
+images_by_client = list(images_by_client)
 
 # Step 2: check if any of those other machines have any of the same image layers as the ones we need for the current pull operation
 
