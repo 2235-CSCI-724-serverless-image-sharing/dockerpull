@@ -2,13 +2,14 @@
 import grequests
 import argparse
 import docker
+import ipaddress
 
 parser = argparse.ArgumentParser(
     prog='dockerpull',
     description='Intelligent version of docker pull'
     )
 parser.add_argument('images', help="a space separated list of images to download")
-parser.add_argument('-t', '--targets', help="a comma-separated list of IP addresses to use to shortcut the network discovery process")
+parser.add_argument('-t', '--targets', help="a comma-separated list of IP addresses, or a single address in CIDR notation denoting the network to use to shortcut the network discovery process")
 parser.add_argument('-p', '--port', type=int, default=5000, help="the port number to use when querying the server")
 # parser.add_argument('-d', '--background', action='store_true', help="Runs the server component of the program")
 
@@ -31,14 +32,21 @@ installed_image_ids = [i.id for i in installed_images]
 # needed_images
 
 # Step 1: Figure out what other machines on the network support this new extension on existing docker functionality
-targets = args.targets.split(",")
-
-if targets is None:
-    # Step 1a: Figure out what other machines exist on the network
-    targets = []
+if " " in args.targets:
+    print("Spaces arent allowed in IP targets argument. please specify a comma,separated list of IP addresses, or a network ID in CIDR notation")
+elif "," in args.targets:
+    # this is a list of IPs
+    targets = args.targets.split(",")
+elif "/" in args.targets:
+    # this is liekly a CIDR IP
+    print("detecting hosts from network CIDR IP")
+    net = ipaddress.ip_network(args.targets)
+    
+    targets = [str(h) for h in net.hosts()]
 
 # Step 1b: Figure out which of those machines are advertising support for this dockerpull protocol by running the server
 
+print(f"{len(targets)} target IPs to check")
 urls_to_check = [f"http://{ip}:{args.port}/" for ip in targets]
 # Create a set of unsent Requests:
 rs = (grequests.get(u) for u in urls_to_check)
