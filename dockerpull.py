@@ -1,4 +1,5 @@
 # This is a script to more intelligently perform docker pull between machines on a network for the purposes of reducing bandwidth to external, or non-local networks.
+import grequests
 import argparse
 import docker
 
@@ -30,7 +31,7 @@ installed_image_ids = [i.id for i in installed_images]
 # needed_images
 
 # Step 1: Figure out what other machines on the network support this new extension on existing docker functionality
-targets = args.targets
+targets = args.targets.split(",")
 
 if targets is None:
     # Step 1a: Figure out what other machines exist on the network
@@ -38,9 +39,17 @@ if targets is None:
 
 # Step 1b: Figure out which of those machines are advertising support for this dockerpull protocol by running the server
 
-    # args.port
+urls_to_check = [f"http://{ip}:{args.port}/" for ip in targets]
+# Create a set of unsent Requests:
+rs = (grequests.get(u) for u in urls_to_check)
 
+results = grequests.map(rs)
 
+clients = list(zip(urls_to_check, results))
+
+active_clients = list(filter(lambda r: r[1] is not None and r[1].status_code == 200, clients))
+
+active_clients = list(map(lambda r: (r[0], r[1].json()), active_clients))
 
 
 # Step 2: check if any of those other machines have any of the same image layers as the ones we need for the current pull operation
