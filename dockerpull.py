@@ -45,11 +45,11 @@ rs = (grequests.get(u) for u in urls_to_check)
 
 results = grequests.map(rs)
 
-clients = list(zip(urls_to_check, results))
+clients = zip(urls_to_check, results)
+active_clients = filter(lambda r: r[1] is not None and r[1].status_code == 200, clients)
 
-active_clients = list(filter(lambda r: r[1] is not None and r[1].status_code == 200, clients))
+active_clients = map(lambda r: (r[0], r[1].json()), active_clients)
 
-active_clients = list(map(lambda r: (r[0], r[1].json()), active_clients))
 
 
 # Step 2: check if any of those other machines have any of the same image layers as the ones we need for the current pull operation
