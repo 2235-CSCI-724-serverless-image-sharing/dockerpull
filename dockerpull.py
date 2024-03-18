@@ -72,6 +72,8 @@ images_by_client = list(images_by_client)
 registrydata = [client.images.get_registry_data(name) for name in requested_images]
 requested_image_ids = [d.id for d in registrydata]
 
+def id_to_name(image_id):
+    return requested_images[requested_image_ids.index(image_id)]
 
 remote_source_map = list(zip(requested_image_ids, [None]*len(requested_image_ids)))
 remote_source_map = {remote_source_map[i][0]: remote_source_map[i][1] for i in range(0, len(remote_source_map))}
