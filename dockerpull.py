@@ -25,6 +25,7 @@ client = docker.from_env()
 
 requested_images = args.images.split(" ") #[client.images.get(image) for image in ]
 
+print(f"Requested Docker Images: {requested_images}")
 installed_images = client.images.list()
 # installed_images_text = [i.tags[0] if i.tags != [] else i.id for i in installed_images]
 installed_image_ids = [i.id for i in installed_images]
