@@ -59,8 +59,11 @@ images_by_client = list(images_by_client)
 
 # Gets the registry data for an image.
 
-#  get_registry_data(name, auth_config=None)
+registrydata = [client.images.get_registry_data(name) for name in requested_images]
+requested_image_ids = set([d.id for d in registrydata])
 
+clients_containing_image = filter(lambda c: len(requested_image_ids.intersection(c[1])) > 0, images_by_client)
+clients_containing_image = list(clients_containing_image)
 
 # Step 3: If they do, download them from that local source instead 
 
