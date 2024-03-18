@@ -91,6 +91,15 @@ for image, sources in remote_source_map.items():
         remote_source_map[image] = list(clients_containing_image)
 
 # Step 3: If they do, download them from that local source instead 
+local_download = {k: v for k, v in remote_source_map.items() if len(v) > 0}
+docker_download = [id_to_name(k) for k, v in remote_source_map.items() if len(v) == 0]
 
-# Step 4: fetch any remaining layers from docker hub
-client.images.pull(args.images)
+
+for image, sources in local_download.items():
+    pass
+    # TODO: set up concurrent remote downloads from the sources
+
+for image in docker_download:
+# Step 4: fetch any remaining images from docker hub
+    print(f"Pulling image for {image}...")
+    client.images.pull(image)
