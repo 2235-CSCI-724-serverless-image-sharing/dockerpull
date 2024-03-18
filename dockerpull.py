@@ -21,6 +21,14 @@ args = parser.parse_args()
 
 client = docker.from_env()
 
+intended_images = args.images.split(" ") #[client.images.get(image) for image in ]
+
+installed_images = client.images.list()
+# installed_images_text = [i.tags[0] if i.tags != [] else i.id for i in installed_images]
+installed_image_ids = [i.id for i in installed_images]
+
+# needed_images
+
 # Step 1: Figure out what other machines on the network support this new extension on existing docker functionality
 targets = args.targets
 
