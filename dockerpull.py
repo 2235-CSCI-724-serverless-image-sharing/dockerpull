@@ -47,7 +47,7 @@ elif "/" in args.targets:
 # Step 1b: Figure out which of those machines are advertising support for this dockerpull protocol by running the server
 
 print(f"{len(targets)} target IPs to check")
-urls_to_check = [f"http://{ip}:{args.port}/" for ip in targets]
+urls_to_check = [f"http://{ip}:{args.port}/dockerpull" for ip in targets]
 # Create a set of unsent Requests:
 rs = (grequests.get(u) for u in urls_to_check)
 

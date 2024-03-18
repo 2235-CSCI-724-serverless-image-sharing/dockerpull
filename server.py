@@ -3,7 +3,7 @@ import docker
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/dockerpull")
 def list_images():
 	client = docker.from_env()
 	installed_images = client.images.list()
@@ -14,7 +14,7 @@ def list_images():
 		"images" : installed_image_ids
 	})
 
-@app.route("/image/<id>")
+@app.route("/dockerpull/image/<id>")
 def download(id):
 	return "<p>Hello, World!</p>"
 
