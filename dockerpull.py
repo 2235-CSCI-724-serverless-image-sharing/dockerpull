@@ -46,7 +46,13 @@ rs = (grequests.get(u) for u in urls_to_check)
 results = grequests.map(rs)
 
 clients = zip(urls_to_check, results)
+# clients = list(clients)
+
+# print(clients)
+
+
 active_clients = filter(lambda r: r[1] is not None and r[1].status_code == 200, clients)
+# print(list(active_clients))
 
 active_clients = map(lambda r: (r[0], r[1].json()), active_clients)
 
@@ -54,16 +60,33 @@ dockerpull_clients = filter(lambda r: r[1].get("dockerpull_version") is not None
 
 images_by_client = map(lambda r: (r[0], set(r[1].get("images"))), dockerpull_clients)
 images_by_client = list(images_by_client)
+# print(images_by_client)
+
 
 # Step 2: check if any of those other machines have any of the same image layers as the ones we need for the current pull operation
+
+# TODO: filter the requested images list to things we dont already have
 
 # Gets the registry data for an image.
 
 registrydata = [client.images.get_registry_data(name) for name in requested_images]
-requested_image_ids = set([d.id for d in registrydata])
+requested_image_ids = [d.id for d in registrydata]
 
-clients_containing_image = filter(lambda c: len(requested_image_ids.intersection(c[1])) > 0, images_by_client)
-clients_containing_image = list(clients_containing_image)
+
+remote_source_map = list(zip(requested_image_ids, [None]*len(requested_image_ids)))
+remote_source_map = {remote_source_map[i][0]: remote_source_map[i][1] for i in range(0, len(remote_source_map))}
+
+for image, sources in remote_source_map.items():
+    clients_containing_image = filter(lambda c: len(set(image).intersection(c[1])) > 0, images_by_client)
+    clients_containing_image = map(lambda r: r[0], clients_containing_image)
+
+    if sources is not None:
+        existing_values = sources
+        existing_values.append(clients_containing_image)
+        existing_values = list(set(existing_values))
+        remote_source_map[image] = list(existing_values)
+    else: 
+        remote_source_map[image] = list(clients_containing_image)
 
 # Step 3: If they do, download them from that local source instead 
 
