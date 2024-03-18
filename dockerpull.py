@@ -22,7 +22,7 @@ args = parser.parse_args()
 
 client = docker.from_env()
 
-intended_images = args.images.split(" ") #[client.images.get(image) for image in ]
+requested_images = args.images.split(" ") #[client.images.get(image) for image in ]
 
 installed_images = client.images.list()
 # installed_images_text = [i.tags[0] if i.tags != [] else i.id for i in installed_images]
