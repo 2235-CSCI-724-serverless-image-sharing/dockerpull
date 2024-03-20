@@ -92,7 +92,7 @@ remote_source_map = list(zip(requested_image_ids, [None]*len(requested_image_ids
 remote_source_map = {remote_source_map[i][0]: remote_source_map[i][1] for i in range(0, len(remote_source_map))}
 
 for image, sources in remote_source_map.items():
-    clients_containing_image = filter(lambda c: len(set(image).intersection(c[1])) > 0, images_by_client)
+    clients_containing_image = filter(lambda c: len(set([image]).intersection(c[1])) > 0, images_by_client)
     clients_containing_image = map(lambda r: r[0], clients_containing_image)
 
     if sources is not None:
