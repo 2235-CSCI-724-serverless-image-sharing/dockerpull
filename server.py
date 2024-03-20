@@ -1,17 +1,33 @@
 from flask import Flask, jsonify
 import docker
+from requests.exceptions import HTTPError
 
 app = Flask(__name__)
+
+
+
+def fetch_container_ids(client, installed_images):
+	# Driver code to check above generator function 
+	for i in installed_images:  
+		if i.tags == []:
+			print(f"no tag for image {i.id}")
+			continue
+		try:
+			regdata = client.images.get_registry_data(i.tags[0])
+			yield regdata.id
+		except HTTPError:
+			print(f"http error fetching image {i.id}")
+			continue
+
+		
 
 @app.route("/dockerpull")
 def list_images():
 	client = docker.from_env()
 	installed_images = client.images.list()
-	installed_image_ids = [i.id for i in installed_images]
-	installed_images_text = [i.tags[0] if i.tags != [] else i.id for i in installed_images]
-
-	registrydata = [client.images.get_registry_data(name) for name in installed_images_text]
-	installed_image_ids_registry = [d.id for d in registrydata]
+	# installed_image_ids = [i.id for i in installed_images]
+	installed_image_ids_registry = list(fetch_container_ids(client, installed_images))
+	
 	# return JSON that identifies the server and lists the image/layer IDs it can send
 	return jsonify({
 		"dockerpull_version": "0",
