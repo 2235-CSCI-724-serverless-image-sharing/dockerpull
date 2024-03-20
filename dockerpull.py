@@ -72,6 +72,7 @@ dockerpull_clients = filter(lambda r: r[1].get("dockerpull_version") is not None
 
 images_by_client = map(lambda r: (r[0], set(r[1].get("images"))), dockerpull_clients)
 images_by_client = list(images_by_client)
+print(images_by_client)
 # print(images_by_client)
 
 
@@ -102,6 +103,7 @@ for image, sources in remote_source_map.items():
     else: 
         remote_source_map[image] = list(clients_containing_image)
 
+print(remote_source_map)
 # Step 3: If they do, download them from that local source instead 
 local_download = {k: v for k, v in remote_source_map.items() if len(v) > 0}
 docker_download = [id_to_name(k) for k, v in remote_source_map.items() if len(v) == 0]
