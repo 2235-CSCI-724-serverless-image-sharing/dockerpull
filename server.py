@@ -13,6 +13,7 @@ def fetch_container_ids(client, installed_images):
 			print(f"no tag for image {i.id}")
 			continue
 		try:
+			# TODO: this is slow
 			regdata = client.images.get_registry_data(i.tags[0])
 			yield regdata.id
 		except HTTPError:
