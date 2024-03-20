@@ -44,6 +44,9 @@ elif "/" in args.targets:
     net = ipaddress.ip_network(args.targets)
     
     targets = [str(h) for h in net.hosts()]
+else:
+    # single IP address
+    targets=[args.targets]
 
 # Step 1b: Figure out which of those machines are advertising support for this dockerpull protocol by running the server
 
