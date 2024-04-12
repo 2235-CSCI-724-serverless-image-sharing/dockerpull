@@ -122,8 +122,9 @@ for image, sources in local_download.items():
                 # and set chunk_size parameter to None.
                 #if chunk: 
                 tmp.write(chunk)
-
-        client.images.load(tmp.read())
+        tmp.seek(0)
+        f = client.images.load(tmp.read())
+        print(f)
 
 for image in docker_download:
 # Step 4: fetch any remaining images from docker hub
