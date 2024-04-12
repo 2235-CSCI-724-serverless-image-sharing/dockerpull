@@ -38,11 +38,10 @@ class Node:
 
 # Example usage of a single node:
 docker_hub = DockerHub()
-node = Node(0)
-work_manager = ['ubuntu', 'nginx', 'nodejs','python-10.0']
-node.run(work_manager)
-print(node.lookup())  # Outputs: ['ubuntu', 'nginx', 'nodejs', 'python-10.0']
-print(docker_hub.counts)  # Outputs the dictionary with counts
+workloads = ['ubuntu', 'nginx', 'nodejs','python-10.0']
+# node.run(work_manager)
+# print(node.lookup())  # Outputs: ['ubuntu', 'nginx', 'nodejs', 'python-10.0']
+# print(docker_hub.counts)  # Outputs the dictionary with counts
 
 # Creating 100 Node objects
 nodes = [Node(i) for i in range(1, 101)]
