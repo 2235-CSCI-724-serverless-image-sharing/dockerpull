@@ -23,9 +23,9 @@ class Node:
         # Return the list of images stored in this Node
         return self.images
 
-    def run(self, work_manager):
+    def run(self, workload):
         # 'work_manager' is a list of image names to pull
-        for image in work_manager:
+        for image in workload:
             if image not in self.images:
                 self.images.append(image)
                 docker_hub.get(image)  # Increment the count for this image in DockerHub
