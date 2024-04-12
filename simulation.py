@@ -18,11 +18,11 @@ class Node:
     def name(self):
         return f"node{self.id:04d}"
 
-    def __init__(self, unique_id, other_nodes=None):
-        # other_nodes is a list of other nodes in the system it if is a list of other node objects, then fetching from other nodes is allowed
+    def __init__(self, unique_id, all_nodes=None):
+        # all_nodes is a list of other nodes in the system it if is a list of other node objects, then fetching from other nodes is allowed
         self.id = unique_id
         self.images = []
-        self.nodelist = other_nodes
+        self.nodelist = all_nodes
     
     def __str__(self):
         variables = dict(vars(self))
