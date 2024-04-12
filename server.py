@@ -21,6 +21,14 @@ def fetch_container_ids(client, installed_images):
 			print(f"http error fetching image {i.id}")
 			continue
 
+def update_image_cache():
+	global installed_image_ids_registry
+	client = docker.from_env()
+	installed_images = client.images.list()
+	# installed_image_ids = [i.id for i in installed_images]
+	installed_image_ids_registry = [image.tags[0] if len(image.tags) > 0 else "" for image in installed_images]
+	installed_image_ids_registry = list(filter(lambda d: d != "", installed_image_ids_registry))
+
 def get_filename(identifier):
 	print(identifier)
 	identifier = identifier.replace(":", "_")
@@ -64,7 +72,7 @@ def pull(identifier):
 	try:
 		client = docker.from_env()
 		image = client.images.pull(identifier)
-
+		update_image_cache()
 		# https://flask.palletsprojects.com/en/2.3.x/patterns/streaming/
 		return "done", 200
 	except docker.errors.ImageNotFound:
@@ -73,10 +81,6 @@ def pull(identifier):
 		
 if __name__ == '__main__':
 
-	client = docker.from_env()
-	installed_images = client.images.list()
-	# installed_image_ids = [i.id for i in installed_images]
-	installed_image_ids_registry = [image.tags[0] if len(image.tags) > 0 else "" for image in installed_images]
-	installed_image_ids_registry = list(filter(lambda d: d != "", installed_image_ids_registry))
+	update_image_cache()	
 
 	app.run(debug=True, host="0.0.0.0", port=5000)
