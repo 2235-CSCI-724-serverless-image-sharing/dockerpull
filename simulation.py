@@ -23,6 +23,11 @@ class Node:
         self.id = unique_id
         self.images = []
         self.nodelist = other_nodes
+    
+    def __str__(self):
+        variables = dict(vars(self))
+        del variables["nodelist"]
+        return str(variables)
 
     def lookup(self):
         # Return the list of images stored in this Node
@@ -40,6 +45,13 @@ class Node:
                     # fetch from docker hub
                     docker_hub.get(image)  # Increment the count for this image in DockerHub
                     self.images.append(image)
+
+
+def status_update(nodes):
+    for node in nodes:
+        print(node)
+
+
 
 # Example usage of a single node:
 docker_hub = DockerHub()
@@ -63,7 +75,7 @@ for workload in workloads:
 # Check the lookup for node1 and node5
 # print(nodes[0].lookup())  # Outputs: ['ubuntu', 'nginx', 'nodejs']
 # print(nodes[4].lookup())  # Outputs: ['ubuntu', 'nginx', 'nodejs']
-
+status_update(nodes)
 # Checking updated DockerHub counts after running multiple nodes
 print(docker_hub.counts)  # This will show updated counts reflecting multiple pulls by different nodes
 
