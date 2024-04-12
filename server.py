@@ -59,6 +59,18 @@ def download(identifier):
 	except docker.errors.ImageNotFound:
 		return "Not found", 404
 
+@app.route("/dockerpull/pull/<identifier>")
+def pull(identifier):
+	try:
+		client = docker.from_env()
+		image = client.images.pull(identifier)
+
+		# https://flask.palletsprojects.com/en/2.3.x/patterns/streaming/
+		return "done", 200
+	except docker.errors.ImageNotFound:
+		return "Not found", 404
+
+		
 if __name__ == '__main__':
 
 	client = docker.from_env()
