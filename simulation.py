@@ -4,15 +4,13 @@ import random
 class DockerHub:
     def __init__(self):
         self.counts = {}
-        self.lock = threading.Lock()
-
+        
     def get(self, key):
-        with self.lock:
-            if key in self.counts:
-                self.counts[key] += 1
-            else:
-                self.counts[key] = 1
-        return self.counts[key]
+        if key in self.counts:
+            self.counts[key] += 1
+        else:
+            self.counts[key] = 1
+        return True
 
 class Node:
     def __init__(self, unique_id):
