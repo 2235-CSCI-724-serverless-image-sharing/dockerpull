@@ -59,6 +59,7 @@ if __name__ == '__main__':
 	client = docker.from_env()
 	installed_images = client.images.list()
 	# installed_image_ids = [i.id for i in installed_images]
-	installed_image_ids_registry = list(fetch_container_ids(client, installed_images))
+	installed_image_ids_registry = [image.tags[0] if len(image.tags) > 0 else "" for image in installed_images]
+	installed_image_ids_registry = list(filter(lambda d: d != "", installed_image_ids_registry))
 
 	app.run(debug=True, host="0.0.0.0", port=5000)
