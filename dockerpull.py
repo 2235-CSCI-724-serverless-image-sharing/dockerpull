@@ -83,7 +83,7 @@ print(images_by_client)
 # Gets the registry data for an image.
 
 registrydata = [client.images.get_registry_data(name) for name in requested_images]
-requested_image_ids = [d.id for d in registrydata]
+requested_image_ids = [d.image_name for d in registrydata]
 
 def id_to_name(image_id):
     return requested_images[requested_image_ids.index(image_id)]
