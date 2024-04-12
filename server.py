@@ -3,7 +3,7 @@ import docker
 from requests.exceptions import HTTPError
 
 app = Flask(__name__)
-
+installed_image_ids_registry = []
 
 
 def fetch_container_ids(client, installed_images):
@@ -15,7 +15,7 @@ def fetch_container_ids(client, installed_images):
 		try:
 			# TODO: this is slow
 			regdata = client.images.get_registry_data(i.tags[0])
-			yield regdata.id
+			yield regdata.image_name
 		except HTTPError:
 			print(f"http error fetching image {i.id}")
 			continue
@@ -24,11 +24,7 @@ def fetch_container_ids(client, installed_images):
 
 @app.route("/dockerpull")
 def list_images():
-	client = docker.from_env()
-	installed_images = client.images.list()
-	# installed_image_ids = [i.id for i in installed_images]
-	installed_image_ids_registry = list(fetch_container_ids(client, installed_images))
-	
+	global installed_image_ids_registry
 	# return JSON that identifies the server and lists the image/layer IDs it can send
 	return jsonify({
 		"dockerpull_version": "0",
@@ -40,5 +36,10 @@ def download(id):
 	return "<p>Hello, World!</p>"
 
 if __name__ == '__main__':
+
+	client = docker.from_env()
+	installed_images = client.images.list()
+	# installed_image_ids = [i.id for i in installed_images]
+	installed_image_ids_registry = list(fetch_container_ids(client, installed_images))
 
 	app.run(debug=True, host="0.0.0.0", port=5000)
