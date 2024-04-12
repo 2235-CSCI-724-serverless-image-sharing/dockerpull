@@ -46,9 +46,14 @@ workloads = ['ubuntu', 'nginx', 'nodejs','python-10.0']
 # Creating 100 Node objects
 nodes = [Node(i) for i in range(1, 101)]
 
+instances_per_workload = 5
+
 # Running the first five nodes with some image pulls
-for i in range(5):
-    nodes[i].run(['ubuntu', 'nginx', 'nodejs'])
+for workload in workloads:
+    for i in range(instances_per_workload):
+        random_node = random.choice(nodes)
+        print(f"starting workload {workload} on node {random_node}")
+        random_node.run([workload])
 
 # Check the lookup for node1 and node5
 # print(nodes[0].lookup())  # Outputs: ['ubuntu', 'nginx', 'nodejs']
