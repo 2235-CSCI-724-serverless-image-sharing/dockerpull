@@ -31,9 +31,17 @@ def list_images():
 		"images" : installed_image_ids_registry
 	})
 
-@app.route("/dockerpull/image/<id>")
-def download(id):
-	return "<p>Hello, World!</p>"
+@app.route("/dockerpull/image/<identifier>")
+def download(identifier):
+	try:
+		client = docker.from_env()
+		image = client.images.get(identifier)
+		print(image)
+
+		# https://flask.palletsprojects.com/en/2.3.x/patterns/streaming/
+		return app.response_class(image.save(), mimetype='application/x-tar')
+	except docker.errors.ImageNotFound:
+		return "Not found", 404
 
 if __name__ == '__main__':
 
