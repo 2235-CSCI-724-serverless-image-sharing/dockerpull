@@ -13,6 +13,11 @@ class DockerHub:
         return True
 
 class Node:
+
+    @property
+    def name(self):
+        return f"node{self.id:04d}"
+
     def __init__(self, unique_id, other_nodes=None):
         # other_nodes is a list of other nodes in the system it if is a list of other node objects, then fetching from other nodes is allowed
         self.id = unique_id
@@ -52,7 +57,7 @@ instances_per_workload = 5
 for workload in workloads:
     for i in range(instances_per_workload):
         random_node = random.choice(nodes)
-        print(f"starting workload {workload} on node {random_node}")
+        print(f"starting workload {workload} on node {random_node.name}")
         random_node.run([workload])
 
 # Check the lookup for node1 and node5
