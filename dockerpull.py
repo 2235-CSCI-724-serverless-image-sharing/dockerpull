@@ -129,7 +129,7 @@ for image, sources in local_download.items():
                 tmp.write(chunk)
         tmp.seek(0)
         f = client.images.load(tmp.read())
-        print(f)
+    print(f"image {image} successfully pulled locally")
 
 for image in docker_download:
 # Step 4: fetch any remaining images from docker hub
