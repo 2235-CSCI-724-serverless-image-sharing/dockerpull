@@ -1,6 +1,7 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import docker
 from requests.exceptions import HTTPError
+import time
 
 app = Flask(__name__)
 installed_image_ids_registry = []
@@ -20,7 +21,17 @@ def fetch_container_ids(client, installed_images):
 			print(f"http error fetching image {i.id}")
 			continue
 
-		
+@app.before_request
+def log_before():
+    print(f"request initiated for {request.url} at: {time.time()} ")
+
+@app.after_request
+def log_after(response):
+	# print(resp)
+	print(f"request completed for {request.url} at: {time.time()} ")
+	return response
+
+
 
 @app.route("/dockerpull")
 def list_images():
