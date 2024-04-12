@@ -5,6 +5,7 @@ import argparse
 import docker
 import ipaddress
 import tempfile
+import time
 
 parser = argparse.ArgumentParser(
     prog='dockerpull',
@@ -22,6 +23,9 @@ parser.add_argument('-b', '--benchmark', action='store_true', help="Whether or n
 args = parser.parse_args()
 
 # Normal client operation
+if args.benchmark:
+    starttime = time.time()
+
 
 client = docker.from_env()
 
@@ -115,6 +119,8 @@ print(remote_source_map)
 local_download = {k: v for k, v in remote_source_map.items() if len(v) > 0}
 docker_download = [id_to_name(k) for k, v in remote_source_map.items() if len(v) == 0]
 
+if args.benchmark:
+    setuptime = time.time()
 
 for image, sources in local_download.items():
     # TODO: set up concurrent remote downloads from the sources
@@ -131,7 +137,24 @@ for image, sources in local_download.items():
         f = client.images.load(tmp.read())
     print(f"image {image} successfully pulled locally")
 
+if args.benchmark:
+    localpull = time.time()
+    
+
 for image in docker_download:
 # Step 4: fetch any remaining images from docker hub
     print(f"Pulling image for {image}...")
     client.images.pull(image)
+
+if args.benchmark:
+    dockerpull = time.time()
+    print("times: ")
+    print(f"\tStart: {starttime}")
+    print(f"\tSetup time: {setuptime}")
+    print(f"\tlocal pull time: {localpull}")
+    print(f"\t docker pull time: {dockerpull}")
+    print("deltas: ")
+    print(f"\t setup: {setuptime-starttime}")
+    print(f"\t local: {localpull-setuptime}")
+    print(f"\t docker: {dockerpull-localpull}")
+    print(f"\t all: {dockerpull-starttime}")
