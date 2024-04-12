@@ -21,6 +21,11 @@ def fetch_container_ids(client, installed_images):
 			print(f"http error fetching image {i.id}")
 			continue
 
+def get_filename(identifier):
+	print(identifier)
+	identifier = identifier.replace(":", "_")
+	return f'{identifier}.tar'
+
 @app.before_request
 def log_before():
     print(f"request initiated for {request.url} at: {time.time()} ")
@@ -50,7 +55,7 @@ def download(identifier):
 		print(image)
 
 		# https://flask.palletsprojects.com/en/2.3.x/patterns/streaming/
-		return app.response_class(image.save(), mimetype='application/x-tar')
+		return app.response_class(image.save(), mimetype='application/x-tar', headers={'Content-Disposition': f'attachment; filename={get_filename(identifier)}'})
 	except docker.errors.ImageNotFound:
 		return "Not found", 404
 
