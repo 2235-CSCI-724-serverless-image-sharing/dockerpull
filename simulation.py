@@ -13,9 +13,11 @@ class DockerHub:
         return True
 
 class Node:
-    def __init__(self, unique_id):
+    def __init__(self, unique_id, other_nodes=None):
+        # other_nodes is a list of other nodes in the system it if is a list of other node objects, then fetching from other nodes is allowed
         self.id = unique_id
         self.images = []
+        self.nodelist = other_nodes
 
     def lookup(self):
         # Return the list of images stored in this Node
