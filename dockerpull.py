@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(
     prog='dockerpull',
     description='Intelligent version of docker pull'
     )
-parser.add_argument('images', help="a space separated list of images to download")
+parser.add_argument('images', nargs='+', help="a space separated list of images to download")
 parser.add_argument('-t', '--targets', help="a comma-separated list of IP addresses, or a single address in CIDR notation denoting the network to use to shortcut the network discovery process")
 parser.add_argument('-p', '--port', type=int, default=5000, help="the port number to use when querying the server")
 # parser.add_argument('-d', '--background', action='store_true', help="Runs the server component of the program")
@@ -25,7 +25,12 @@ args = parser.parse_args()
 
 client = docker.from_env()
 
-requested_images = args.images.split(" ") #[client.images.get(image) for image in ]
+print(args.images)
+requested_images = []
+if isinstance(args.images, list):
+    requested_images = args.images
+else:
+    requested_images = args.images.split(" ") #[client.images.get(image) for image in ]
 
 print(f"Requested Docker Images: {requested_images}")
 installed_images = client.images.list()
