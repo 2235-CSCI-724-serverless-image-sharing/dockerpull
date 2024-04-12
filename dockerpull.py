@@ -1,8 +1,10 @@
 # This is a script to more intelligently perform docker pull between machines on a network for the purposes of reducing bandwidth to external, or non-local networks.
 import grequests
+import requests
 import argparse
 import docker
 import ipaddress
+import tempfile
 
 parser = argparse.ArgumentParser(
     prog='dockerpull',
@@ -110,8 +112,18 @@ docker_download = [id_to_name(k) for k, v in remote_source_map.items() if len(v)
 
 
 for image, sources in local_download.items():
-    pass
     # TODO: set up concurrent remote downloads from the sources
+    print(image)
+    with tempfile.TemporaryFile() as tmp:
+        with requests.get(f"{sources[0]}/image/{image}", stream=True) as r:
+            r.raise_for_status()
+            for chunk in r.iter_content(chunk_size=8192): 
+                # If you have chunk encoded response uncomment if
+                # and set chunk_size parameter to None.
+                #if chunk: 
+                tmp.write(chunk)
+
+        client.images.load(tmp.read())
 
 for image in docker_download:
 # Step 4: fetch any remaining images from docker hub
