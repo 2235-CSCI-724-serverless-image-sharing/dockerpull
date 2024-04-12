@@ -27,8 +27,14 @@ class Node:
         # 'work_manager' is a list of image names to pull
         for image in workload:
             if image not in self.images:
-                self.images.append(image)
-                docker_hub.get(image)  # Increment the count for this image in DockerHub
+                
+                if self.nodelist is not None:
+                    # if some other node has it, fetch from it, else fetch from docker hub
+                    pass
+                else:
+                    # fetch from docker hub
+                    docker_hub.get(image)  # Increment the count for this image in DockerHub
+                    self.images.append(image)
 
 # Example usage of a single node:
 docker_hub = DockerHub()
