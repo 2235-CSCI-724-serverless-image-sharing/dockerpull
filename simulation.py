@@ -106,10 +106,3 @@ status_update(nodes)
 # Checking updated DockerHub counts after running multiple nodes
 print(docker_hub.counts)  # This will show updated counts reflecting multiple pulls by different nodes
 
-# Randomly selecting a node and searching for a specific image
-search_image = 'nginx'
-random_node = random.choice(nodes)
-if search_image in random_node.lookup():
-    print(f"Image '{search_image}' found in Node {random_node.id}")
-else:
-    print(f"Image '{search_image}' not found in Node {random_node.id}")
