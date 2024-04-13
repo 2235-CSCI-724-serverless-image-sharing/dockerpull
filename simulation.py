@@ -54,7 +54,7 @@ class Node:
                 if self.nodelist is not None:
                     tmplist = list(self.nodelist)
                     tmplist = filter(lambda n: n.id != self.id, tmplist)
-                    tmplist = filter(lambda n: workload in n.lookup(), tmplist)
+                    tmplist = filter(lambda n: image in n.lookup(), tmplist)
                     tmplist = list(tmplist)
                     # if some other node has it, fetch from it, else fetch from docker hub
                     if len(tmplist) > 0:
