@@ -83,7 +83,7 @@ MB = 1024*1024
 
 workloads = {
     'ubuntu:20.04': 63.2*MB,
-    # 'nginx': 0,
+    'nginx:latest': 192.01*MB,
     # 'node:bullseye': 0,
     'maven:3.6.1-jdk-8': 499*MB,
     'python:3.10': 1024*MB,
