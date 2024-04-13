@@ -73,6 +73,14 @@ def status_update(nodes):
     for node in nodes:
         print(node)
 
+# http://stackoverflow.com/questions/1094841/ddg#1094933
+def sizeof_fmt(num, suffix='B'):
+    for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Yi', suffix)
+
 MB = 1024*1024 
 
 workloads = {
@@ -112,3 +120,4 @@ status_update(nodes)
 # Checking updated DockerHub counts after running multiple nodes
 print(docker_hub.counts)  # This will show updated counts reflecting multiple pulls by different nodes
 
+print(docker_hub.bandwidth_by_workload(workloads, format=sizeof_fmt))
