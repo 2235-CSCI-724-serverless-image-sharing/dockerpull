@@ -1,5 +1,6 @@
 import threading
 import random
+import json
 
 import argparse
 
@@ -128,9 +129,21 @@ if args.stats:
     if args.verbose:
         for node in nodes:
             print(node)
-        
-        
-    # Checking updated DockerHub counts after running multiple nodes
-    print(docker_hub.counts)  # This will show updated counts reflecting multiple pulls by different nodes
+    node_data = "["
 
-    print(docker_hub.bandwidth_by_workload(workloads, format=sizeof_fmt))
+    for node in nodes:
+        node_data += str(node) + ","
+    node_data = node_data[0:-1] + "]"
+    node_data = node_data.replace("\'", "\"")
+    stats = {
+        
+        "bandwidth": {
+            "downloads": docker_hub.counts,
+            "by_workload": docker_hub.bandwidth_by_workload(workloads, format=sizeof_fmt),
+            "total": sum(docker_hub.bandwidth_by_workload(workloads).values()),
+            "total_human": sizeof_fmt(sum(docker_hub.bandwidth_by_workload(workloads).values()))
+        }
+    }
+    if args.verbose:
+        stats["nodes"] = json.loads(node_data)
+    print(json.dumps(stats))
