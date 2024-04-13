@@ -39,8 +39,19 @@ class Node:
             if image not in self.images:
                 
                 if self.nodelist is not None:
+                    tmplist = list(self.nodelist)
+                    tmplist = filter(lambda n: n.id != self.id, tmplist)
+                    tmplist = filter(lambda n: workload in n.lookup(), tmplist)
+                    tmplist = list(tmplist)
                     # if some other node has it, fetch from it, else fetch from docker hub
-                    pass
+                    if len(tmplist) > 0:
+                        selected_node = tmplist[0]
+                        # pretend we did a local fetch here
+                        self.images.append(image)
+                    else:
+                        # fetch from docker hub
+                        docker_hub.get(image)  # Increment the count for this image in DockerHub
+                        self.images.append(image)
                 else:
                     # fetch from docker hub
                     docker_hub.get(image)  # Increment the count for this image in DockerHub
