@@ -12,6 +12,17 @@ class DockerHub:
             self.counts[key] = 1
         return True
 
+    def bandwidth_by_workload(self, bytes_per_workload={}, format=None):
+        bandwidth_per_workload = {}
+        for key,value in self.counts.items():
+            bandwidth = bytes_per_workload.get(key,0)
+            if format is not None:
+                bandwidth_per_workload[key] = format(bandwidth*value)
+            else:
+                bandwidth_per_workload[key] = bandwidth*value
+        return bandwidth_per_workload
+
+
 class Node:
 
     @property
@@ -62,28 +73,24 @@ def status_update(nodes):
     for node in nodes:
         print(node)
 
-
-
-# Example usage of a single node:
-docker_hub = DockerHub()
 workloads = ['ubuntu', 'nginx', 'nodejs','python-10.0']
 # node.run(work_manager)
 # print(node.lookup())  # Outputs: ['ubuntu', 'nginx', 'nodejs', 'python-10.0']
 # print(docker_hub.counts)  # Outputs the dictionary with counts
 
 allow_cross_node_fetching = True
+instances_per_workload = 5
 
+# docker hub simulation to track downloads
+docker_hub = DockerHub()
 
 # Creating 100 Node objects
 nodes = []
 if allow_cross_node_fetching:
     for i in range(1, 101):
         nodes.append(Node(i, all_nodes=nodes))
-
 else:
     nodes = [Node(i) for i in range(1, 101)]
-
-instances_per_workload = 5
 
 # Running the first five nodes with some image pulls
 for workload in workloads:
