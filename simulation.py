@@ -73,10 +73,16 @@ def status_update(nodes):
     for node in nodes:
         print(node)
 
-workloads = ['ubuntu', 'nginx', 'nodejs','python-10.0']
-# node.run(work_manager)
-# print(node.lookup())  # Outputs: ['ubuntu', 'nginx', 'nodejs', 'python-10.0']
-# print(docker_hub.counts)  # Outputs the dictionary with counts
+MB = 1024*1024 
+
+workloads = {
+    'ubuntu:20.04': 63.2*MB,
+    # 'nginx': 0,
+    # 'node:bullseye': 0,
+    'maven:3.6.1-jdk-8': 499*MB,
+    'python:3.10': 1024*MB,
+}
+workload_names = workloads.keys()
 
 allow_cross_node_fetching = True
 instances_per_workload = 5
@@ -93,7 +99,7 @@ else:
     nodes = [Node(i) for i in range(1, 101)]
 
 # Running the first five nodes with some image pulls
-for workload in workloads:
+for workload in workload_names:
     for i in range(instances_per_workload):
         random_node = random.choice(nodes)
         print(f"starting workload {workload} on node {random_node.name}")
