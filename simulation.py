@@ -60,8 +60,17 @@ workloads = ['ubuntu', 'nginx', 'nodejs','python-10.0']
 # print(node.lookup())  # Outputs: ['ubuntu', 'nginx', 'nodejs', 'python-10.0']
 # print(docker_hub.counts)  # Outputs the dictionary with counts
 
+allow_cross_node_fetching = True
+
+
 # Creating 100 Node objects
-nodes = [Node(i) for i in range(1, 101)]
+nodes = []
+if allow_cross_node_fetching:
+    for i in range(1, 101):
+        nodes.append(Node(i, all_nodes=nodes))
+
+else:
+    nodes = [Node(i) for i in range(1, 101)]
 
 instances_per_workload = 5
 
